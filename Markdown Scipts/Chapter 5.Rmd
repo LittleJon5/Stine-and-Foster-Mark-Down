@@ -1,0 +1,96 @@
+---
+title: "Chapter 5"
+author: "Jonathan Nelson"
+date: "February 17, 2015"
+output: pdf_document
+---
+
+Chapter 5.1
+
+```{r}
+require(ggplot2)
+require(reshape2)
+
+amazon <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 5\\05_amazon_2010\\05_amazon_2010.txt",
+                     header = TRUE,
+                     sep = "\t")
+
+ggplot(data = amazon, aes(x = Host)) +
+  geom_bar(width = .5, fill = "blue") +
+  coord_flip() +
+  labs(x = "Host", y = "Visits")
+
+ggplot(data = amazon, aes(x = Purchase)) +
+  geom_bar(width = .5, fill = "blue") +
+  coord_flip() +
+  labs(x = "Purchase", y = "Visits")
+
+```
+
+stacked bar charts Percentage
+```{r}
+c.table <- t(table(amazon$Purchase, amazon$Region))
+c.table[,1] <- c.table[,1] / sum(c.table[,1])
+c.table[,2] <- c.table[,2] / sum(c.table[,2])
+c.table <- as.data.frame(c.table)
+names(c.table) <- c("Region", "Purchase", "Percentage")
+
+ggplot(data = c.table, aes(x = Purchase, y = Percentage, fill = factor(Region))) +
+  geom_bar(stat = "identity") +
+  coord_flip()
+
+```
+
+Stacked bar Charts: Counts
+```{r}
+
+amazon$Purchase <- factor(amazon$Purchase, levels = rev(levels(amazon$Purchase)))
+
+ggplot(data = amazon, aes(x = Purchase, fill = Region)) +
+  geom_bar(stat = "bin", width = .5) +
+  coord_flip()
+
+```
+
+Mosaic plot for amazon and shirts
+
+```{r}
+
+shirts <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 5\\05_mens_shirts\\05_mens_shirts.txt", header = TRUE, sep = "\t")
+ 
+# function thanks to stack overflow
+####################################
+
+ggMMplot <- function(var1, var2, Title = "Title", xlab = "xlab", ylab = "ylab"){
+  levVar1 <- length(levels(var1))
+  levVar2 <- length(levels(var2))
+
+  jointTable <- prop.table(table(var1, var2))
+  plotData <- as.data.frame(jointTable)
+  plotData$marginVar1 <- prop.table(table(var1))
+  plotData$var2Height <- plotData$Freq / plotData$marginVar1
+  plotData$var1Center <- c(0, cumsum(plotData$marginVar1)[1:levVar1 -1]) +
+    plotData$marginVar1 / 2
+
+  ggplot(plotData, aes(var1Center, var2Height)) +
+    geom_bar(stat = "identity", aes(width = marginVar1, fill = var2), col = "Black") +
+    labs(x = xlab, y = ylab, title = Title) +
+    geom_text(aes(label = as.character(var1), y = 1.05)) +
+    guides(fill=guide_legend(title= ylab))
+  }
+
+# Amazon Graph
+#####
+
+ggMMplot(amazon$Region, amazon$Purchase, "Purchases by Region \n", "Region", "Purchase")
+
+# Shirts graph
+######
+
+ggMMplot(shirts$Style, shirts$Size, "Shirts Mosaic Plot \n", "Style", "Style")
+
+```
+
+
+
+

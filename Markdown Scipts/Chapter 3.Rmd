@@ -1,0 +1,98 @@
+---
+title: "Chapter 3 Graphics"
+author: "Jonathan Nelson"
+date: "February 10, 2015"
+output: pdf_document
+---
+
+In Chapter 3 we'll be dealing with be dealing principly with bar graphs. There are a few r packages that will be required to complete the assignment. To load the packages, enter the following.
+
+```{r}
+# install.packages("ggplot2") # if you haven't installed ggplot plot, uncomment this line.
+require(ggplot2)
+require("ggthemes")
+```
+
+The first graphs will require the amazon_hosts data set.
+
+```{r, echo=FALSE}
+amazon_host <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 3\\03_amazon_hosts\\03_amazon_hosts.txt", head = TRUE, sep = "\t")
+
+# ordering the data decending
+amazon_host <- amazon_host[order(amazon_host$Count, decreasing = TRUE),]
+# changing the factor patern
+
+
+amazon_host$Host <- factor(amazon_host$Host, levels = amazon_host$Host[order(amazon_host$Count)])
+```
+
+Now it's time to create the first graph. Figure 3.1 in the book.
+```{r}
+top.ten <- amazon_host[3:12,]
+
+ggplot(data = top.ten, aes(x = Host, y = Count, order = Count)) +
+  geom_bar(fill = "blue", stat = "identity", width = .5) +
+  coord_flip() + 
+  labs(x = "", y = "", title = "Number of Visits from Top 10 Hosts \n")
+
+
+```
+
+Figure 3.2
+```{r}
+top.ten$Host <- factor(top.ten$Host, levels = top.ten$Host[order(top.ten$Count, decreasing = TRUE)])
+
+ggplot(data = top.ten, aes(x = Host, y = Count)) +
+  geom_bar(fill = "blue", stat = "identity", width = .3) +
+  labs(x = "", y = "", title = "Number of Visits from Top 10 Hosts \n")
+```
+
+Figure 3.3
+```{r}
+top.ten <- amazon_host[2:12,]
+
+ggplot(data = top.ten, aes(x = Host, y = Count)) +
+  geom_bar(fill = "blue", stat = "identity", width = .5) +
+  coord_flip() + 
+  labs(x = "", y = "", title = "Number of Visits from Top 10 Hosts \n")
+
+```
+
+The stats world typically frowns on pie charts. However, there is a way to con ggplot into creating one for you. 
+
+```{r}
+top.ten <- amazon_host[3:12,]
+
+ggplot(data = top.ten, aes(x = factor(1), y = Count, fill = factor(Host))) + # the factor(1) is important. We want 1 column
+  geom_bar(stat = "identity", width = 1) +
+  coord_flip() + 
+  coord_polar(theta = "y") +
+  labs(x = "", y = "", title = "Number of Visits from Top 10 Hosts \n", fill = "Host") 
+```
+
+Example 3.1 Graph
+```{r}
+rollOver <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 3\\03_4m_roll_over\\03_4m_roll_over.txt", header = TRUE, sep = "\t")
+
+rollOver$Model <- factor(rollOver$Model, levels = rollOver$Model[order(rollOver$Count)])
+
+ggplot(data = rollOver[1:9, ], aes(x = Model, y = Count)) +
+  geom_bar(stat = "identity", fill = "blue", width = .5) +
+  coord_flip() +
+  labs(title = "Fatal Roll-Over Accidents in 2000") +
+  scale_y_continuous(breaks = c(0, 20, 40, 60, 80, 100, 120, 140)) 
+
+```
+
+
+```{r}
+
+
+```
+
+
+
+
+
+
+

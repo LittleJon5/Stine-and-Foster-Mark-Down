@@ -1,0 +1,89 @@
+---
+title: "Chapter 4"
+author: "Jonathan Nelson"
+date: "February 11, 2015"
+output: html_document
+---
+
+Greating the graphs in chapter 4 in R.
+Load the required packages
+```{r}
+require(ggplot2)
+require("gridExtra")
+
+```
+
+figure 4.3, please not that R doesn't like symbols in the data such as # and & or even '. This will need to be removed prior to  bring in the data.
+
+```{r}
+
+ipod <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 4\\04_ipod_songs\\04_ipod_songs.txt",
+                   header = TRUE, 
+                   sep = "\t")
+
+# bin width size 1
+######
+
+p1 <- ggplot(data = ipod, aes(x = Size)) +
+          geom_histogram(binwidth = 1, color = "black", fill = "grey50") +
+          xlim(1, 10)  
+
+# bin width size .5
+######
+
+p2 <- ggplot(data = ipod, aes(x = Size)) +
+          geom_histogram(binwidth = .5, color = "black", fill = "grey50") +
+          xlim(1, 10)  
+
+# bin width size .25
+######
+p3 <- ggplot(data = ipod, aes(x = Size)) +
+          geom_histogram(binwidth = .25, color = "black", fill = "grey50") +
+          xlim(0, 10)  
+          
+grid.arrange(p1, p2, p3)
+
+```
+
+
+```{r}
+boxx1 <- ggplot(data = ipod, aes(x = 1, y = Size)) +
+            geom_boxplot() +
+            coord_flip() +
+            ylim(0, 10)
+
+grid.arrange(boxx1, p3, nrow=2, heights=c(1, 4))
+
+```
+
+An attempt at shaded bars
+```{r}
+ipod$IQR <- ipod$Size <= quantile(ipod$Size, .75) & ipod$Size >= quantile(ipod$Size, .25)
+
+ipod$half <- ipod$Size <= quantile(ipod$Size, .5)
+
+iqr.graph <- ggplot(data = ipod, aes(x = Size, fill = IQR)) +
+                  geom_histogram(binwidth = .25, color = "black") +
+                  xlim(0, 10)  +
+                  guides(fill = FALSE)
+
+
+first.half.graph <- ggplot(data = ipod, aes(x = Size, fill = half)) +
+                        geom_histogram(binwidth = .25, color = "black") +
+                        xlim(0, 10) +
+                        guides(fill = FALSE)
+
+
+grid.arrange(boxx1, iqr.graph, nrow=2, heights=c(1, 4))
+          
+```
+
+4.4 Shape of a distribution
+
+```{r}
+
+
+
+```
+
+

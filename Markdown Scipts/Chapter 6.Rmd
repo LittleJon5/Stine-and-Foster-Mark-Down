@@ -1,0 +1,24 @@
+---
+title: "Chapter 6"
+author: "Jonathan Nelson"
+date: "February 19, 2015"
+output: pdf_document
+---
+
+Load the nessiary packages
+
+```{r}
+require("ggplot2")
+require("gridExtra")
+```
+
+Graph of figure 6.3
+
+```{r}
+gas <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 6\\06_natural_gas\\06_natural_gas.txt", header = TRUE, sep = "\t")
+
+
+
+```
+
+
