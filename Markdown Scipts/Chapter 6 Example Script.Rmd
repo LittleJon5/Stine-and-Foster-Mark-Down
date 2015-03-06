@@ -1,0 +1,58 @@
+---
+title: "Example Chapter 6"
+output: pdf_document
+---
+
+# Problem 45
+
+get the data
+
+```{r}
+require(magrittr)
+require(ggplot2)
+cars <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 6\\06_cars\\06_cars.txt", header = TRUE, sep = "\t")
+```
+
+### Part a)
+
+We need to make a scatterplot using the combined or "Official Mpg" and the rated horsepower. We need to figure out which of the columns should be the response variable and which should be the explanitory variable. 
+
+Looking at our options. The best combination would be to put horsepower as the explanitory variable and Mpg as the responce varible. Horsepower does a better job explaining mpg than mpg does explaining horsepower. 
+
+```{r}
+cars %>% 
+  ggplot(aes(x = Horsepower, y = CombinedMPG)) +
+    geom_point() +
+    geom_smooth(method = "lm") +
+    geom_text(aes(label=ifelse((CombinedMPG < median(CombinedMPG) - 1.5 * IQR(CombinedMPG) | CombinedMPG > median(CombinedMPG)  + 1.5 * IQR(CombinedMPG)), CombinedMPG ,"")), hjust=1.1) +
+  geom_text(aes(label=ifelse((Horsepower < median(Horsepower) - 1.5 * IQR(Horsepower) | Horsepower > median(Horsepower)  + 1.5 * IQR(Horsepower)), CombinedMPG ,"")), hjust=1.1) +
+    labs(x = "Horsepower", y = "Official MPG", title = "MPG modeled by Horsepower /n")
+```
+Examing the graph you can see that they have a strong negitive correlation. This means that the points on the graph closely resemble a straight line it has a strong correlation. It's negitive because the line it follows have a negitive slope. The cars to the far right are manufactured by Mercedez Benz. The car in the top left is Scion iQ. 
+
+### Part C)
+
+To find the correlation we'll use the cor function. Remember that correlations go from - 1 to 1. 
+
+```{r}
+cor(cars$CombinedMPG, cars$Horsepower)
+
+```
+
+Our value is -.892, or a strong negitive. 
+
+### Part D)
+
+This correlation provides us with a good summary of the data. As horsepower increases the miles per gallon goes down.
+
+### Part E 
+
+Using the line we've superimposed in the graph follow 200 up until we run into the correlation line. Now move over to the MPG axis it should put us at about 26 miles per gallon.
+
+# Problem 46
+
+### Part A
+
+
+
+
