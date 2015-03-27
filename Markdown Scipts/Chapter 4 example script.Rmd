@@ -1,0 +1,48 @@
+---
+title: "Chapter 4 Examples"
+output: pdf_document
+---
+
+# Chapter Four Example problems
+
+## Problem 54
+
+First things first, we need to bring the data in.
+
+```{r}
+# Load Packages
+##############
+require(ggplot2)
+require(magrittr)
+cars <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 4\\04_cars\\04_cars.txt",
+                   header = TRUE,
+                   sep = "\t")
+names(cars) <- c("displ", " trans", "name", "combinedMPG", "cityMPG", "hwyMPG", "cyl", "guzzler")
+```
+
+### Part A 
+
+Draw a Histogram
+```{r}
+ggplot(data = cars, aes(x = combinedMPG)) +
+  geom_histogram(binwidth = 3, color = "white", fill = "blue") +
+  geom_histogram(data = cars[cars$guzzler == "G",] 
+                 aes(x = combinedMPG),
+                 color = "red",
+                 fill = "lightblue",
+                 binwidth = 1)
+
+```
+Upon examining the histogram we can see that the data has a tail off to the right hand side. This signifies that the histogram is right skewed. Thus, for our summary statistics, we should use the median as a messure of center and the IQR as a mesure of spread.
+
+### Part B
+
+```{r}
+ggplot(data = cars, aes(x = guzzler, y = combinedMPG)) + 
+  geom_boxplot(fill = "yellow", color = "blue") +
+  coord_flip()
+```
+
+
+
+
