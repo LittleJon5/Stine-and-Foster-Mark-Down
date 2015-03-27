@@ -93,6 +93,13 @@ ggplot(data = plot.table[plot.table$gas.type == "Premium",],
 
 ```
 
+Using a Mosiac plot to look at this data can be really helpful. It allows you to see the differences between. Weekdays and the Weekend.
+
+```{r}
+ggMMplot( gas$Type.of.Day, gas$Grade.of.Gasoline, Title = "Mosaic Plot of Days and Cars", xlab = "Day", ylab = "Values" )
+
+```
+
 ### part d
 
 Yes, this is probably because vehicles that require premium gas are more closely tied to recreation and leasure. People typiclaly people indulge in these practises on the weekend.
@@ -135,7 +142,7 @@ In this instance we want to use column percentages because we are more intereste
 ## make three vectors of length 3
 ##--------status, delta, amerian
 ###############
-status <- c("On Time", "Delayed")  
+status <- c("OnTime", "Delayed")  
 american <- c(1536, 416)
 delta <- c(11769, 3343)
 flight.delays <- data.frame(american, delta) # creates a dataframe
@@ -145,6 +152,8 @@ flight.delays$american <- flight.delays$american / sum(flight.delays$american) #
 flight.delays$delta <- flight.delays$delta / sum(flight.delays$delta) # as a percentage
 
 print(flight.delays)
+
+
 
 ```
 Based off this percentage table American Airlines arrives ontime a greater percentage of the time.

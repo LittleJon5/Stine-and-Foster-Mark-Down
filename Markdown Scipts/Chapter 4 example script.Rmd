@@ -26,7 +26,7 @@ Draw a Histogram
 ```{r}
 ggplot(data = cars, aes(x = combinedMPG)) +
   geom_histogram(binwidth = 3, color = "white", fill = "blue") +
-  geom_histogram(data = cars[cars$guzzler == "G",] 
+  geom_histogram(data = cars[cars$guzzler == "G",], 
                  aes(x = combinedMPG),
                  color = "red",
                  fill = "lightblue",
@@ -40,8 +40,80 @@ Upon examining the histogram we can see that the data has a tail off to the righ
 ```{r}
 ggplot(data = cars, aes(x = guzzler, y = combinedMPG)) + 
   geom_boxplot(fill = "yellow", color = "blue") +
-  coord_flip()
+  coord_flip() +
+  labs(title = "BoxPlots for Combined MPG and Guzzlers \n", x = "Guzzler", y = "Combined MPG")
 ```
+
+The Histogram gives you a good feel for where the data lie and in what concentrations. The box plot gives you shows you exactly where the quartiles fall numerically. It also shows the outliers. Another way to do visualize is a violine chart. 
+
+Here's an example.
+```{r}
+ggplot(data = cars, aes(x = guzzler, y = combinedMPG)) + 
+  geom_violin(fill = "lightblue", color = "blue") +
+  geom_boxplot(fill = "yellow", color = "blue", width = .2) +
+  coord_flip() +
+  labs(title = "ViolinPlots for Combined MPG and Guzzlers \n", x = "Guzzler", y = "Combined MPG")
+```
+It combines alot benifits of both histograms and boxplots. The curve on the outside is known as the density curve. It shows the data as a proportion relitive to the responce variable. Because it has a box plot in the middle, it still shows the quartiles and outliers as well.
+
+### Part C: Find the mean and the Standard deviation
+
+```{r}
+## The mean
+########
+mean(cars$combinedMPG)
+## The Standard Deviation
+########
+sd(cars$combinedMPG)
+```
+The mean and the stadard devation aren't the best measures to use in this instance because the data are skewed.
+
+### Part D: coefficient of variation
+
+```{r}
+sd(cars$combinedMPG) / mean(cars$combinedMPG)
+
+```
+Our value .24 isn't very big. We can safely say that the relative size of the variation is quite small. 
+
+### Part E: Outliers
+
+After digging arounding in the data a little I didn't find anything abnormal. The most effienct cars was a Scion IQ at 37 mpg. That seemed reasonable. The lowest cars are the Anerican made 3500 cargo vans.
+
+### Part F: 27.5 and above
+
+We need to find the percentage of cars over 27.5 miles per gallon. 
+
+```{r}
+length(cars$combinedMPG[cars$combinedMPG >= 27.5]) / length(cars$combinedMPG)
+```
+
+8% of vehicles meat the govenments criteria
+Here is a list of the vehicle.
+
+```{r}
+cars$name[cars$combinedMPG >= 27.5]
+
+```
+As far as I can tell all the vehicles are cars.
+
+## Problem 57 : Information Industry
+
+Getting the data.
+```{r}
+info <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 4\\04_information_industry\\04_information_industry.txt",
+                   header = TRUE,
+                   sep = "\t")
+names(info) <- c("company", "totalRevenue", "totalAssets", "CostOfGoodsSold",
+                 "NetIncome", "EmployeRevenue", "ExpenseRD", "ExpenseAdimn",
+                 "ShareBookValue", "NAICS")
+```
+
+
+
+
+
+
 
 
 
