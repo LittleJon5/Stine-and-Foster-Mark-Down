@@ -53,6 +53,36 @@ Using the line we've superimposed in the graph follow 200 up until we run into t
 
 ### Part A
 
+For problem 46 we'll use weight as our explanitory variable and highway mileage as our responce variable. Highway mileage is a variable that we'd want to predict. Weight is also something we have under control.
+
+```{r}
+
+ggplot(data = cars, aes(x = Weight, y = HighwayMPG)) +
+  geom_point(color = "red") +
+  geom_smooth(method = "lm", color = "blue") +
+  labs(x = "Weight", y = "Highway MPG")
+
+```
+
+### Part B 
+
+From the plot we can see that The correlation is fairly strong and negitive. Some outliers to pay attention to may include the point at Weight = 2500, miles per gallon = 26. (Mazda MX-5) The cluster of three less greater than 3500 and greater than 39 are also of interest. (Volkswagen GOLF and Passat--two types). Another one would be the point at 5000 lbs thatis at about 31 miles per gallon. (Mercedes S).
+
+### Part C
+
+```{r}
+
+cor(cars$HighwayMPG, cars$Weight)
+
+```
+
+### Part D
+
+refering back to the scatter plot, if we find the point where the correlation line and vertical line at 4000 lbs intersect it would predict the highway mpg to be 28 mpg.
+
+
+
+
 
 
 

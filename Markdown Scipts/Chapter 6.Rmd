@@ -1,7 +1,5 @@
 ---
 title: "Chapter 6"
-author: "Jonathan Nelson"
-date: "March 6, 2015"
 output: pdf_document
 ---
 
@@ -9,31 +7,37 @@ output: pdf_document
 
 ### Part a)
 
-  Yes, the association is possitive because the good riders are going to do well at both.  How ever it will likely be a weak possitive corrilation because the riders who are good at sprinting and will do well in the short first stage even when they have fresh legs. The last time trial stage is will have a more distance oriented group take the top spots. 
+  Yes, the association is positive because the good riders are going to do well at both. How ever it will likely be a weak positive corrilation because the riders who are good at sprinting and will do well in the short first stage even when they have fresh legs. The last time trial stage is will have a more distance oriented group take the top spots. 
 
 ### Part b)
+
 Read the Data
-```{r}
+
+```{r, echo = FALSE}
 require(magrittr)
-tour <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 6\\06_tour_de_france\\06_tour_de_france.txt", header = TRUE, sep = "\t")
+
+load("C:\\Users\\Jonathan\\Documents\\Stine-and-Foster-Mark-Down\\Markdown Scipts\\Data\\tour_data.rdata")
 
 ```
+
 Graph the Scatter Plot
+
 ```{r}
 require(ggplot2)
 
-ggplot(data = tour, aes(x = Prologue.Time..minutes., y = Stage.19.Time..minutes.)) +
+ggplot(data = tour, aes(x = PrologueTimeMinutes, y = Stage19TimeMinutes)) +
   geom_point() +
-  xlim(10, 12)
+  xlim(10, 12) +
+  labs(x = "Prolog Time in Minutes", y = "Stage 19 Time in Minutes", title = "Prolog vs. Stage 19 \n")
 ```
 
-Based on the graph we can conclue weak possitive.
+Based on the graph we can conclude weak possitive.
 
 ### Part c)
 ```{r}
 tour <- tour %>% na.omit # %>% is the pipe operator from the magrittr package
 
-cor(tour$Prologue.Time..minutes., tour$Stage.19.Time..minutes.)
+cor(tour$PrologueTimeMinutes, tour$Stage19TimeMinutes)
 
 ```
 
@@ -45,7 +49,7 @@ As mentioned in part a, some riders are better suited to short fast time trials 
 # Problem 53
 
 load the data 
-```{r}
+```{r, echo = FALSE}
 load("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 6\\06_flight_delays\\06_flight_delays.rdata")
 ```
 
@@ -92,6 +96,7 @@ Removing the oulier reduces the stregth of the correlation. Though not but very 
 
 That shouldn't affect the correlations because everything would be scaled by the same factor.
 Let's check just in case.
+
 ```{r}
 
 cor(sub.flight$Arrival_Delay/60, sub.flight$Departure_Delay./60)

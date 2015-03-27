@@ -1,0 +1,198 @@
+---
+title: "Homework 5"
+output: pdf_document
+---
+
+
+```{r}
+require(ggplot2)
+require(magrittr)
+# ------------------------------------- Mosaic function thanks to stack overflow
+#####################
+ggMMplot <- function(var1, var2, Title = "Title", xlab = "xlab", ylab = "ylab"){
+  levVar1 <- length(levels(var1))
+  levVar2 <- length(levels(var2))
+
+  jointTable <- prop.table(table(var1, var2))
+  plotData <- as.data.frame(jointTable)
+  plotData$marginVar1 <- prop.table(table(var1))
+  plotData$var2Height <- plotData$Freq / plotData$marginVar1
+  plotData$var1Center <- c(0, cumsum(plotData$marginVar1)[1:levVar1 -1]) +
+    plotData$marginVar1 / 2
+
+  ggplot(plotData, aes(var1Center, var2Height)) +
+    geom_bar(stat = "identity", aes(width = marginVar1, fill = var2), col = "Black") +
+    labs(x = xlab, y = ylab, title = Title) +
+    geom_text(aes(label = as.character(var1), y = 1.05)) +
+    guides(fill=guide_legend(title= ylab))
+  }
+
+# ------------------------------------- Read in the data.
+###############
+
+gas <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 5\\05_gasoline_sales\\05_gasoline_sales.txt", header = TRUE, sep = "\t")
+```
+
+Sorry about all that preliminary stuff. The function above makes Mosiac plots very similar to jmp. 
+
+# Problem 39
+
+### Part a
+
+Contingency table for Gas Sales
+
+```{r}
+# --------------------------------------------- make a table
+#################
+gas.table <- table(gas$Grade.of.Gasoline, gas$Type.of.Day) # creates a standard table of sums 
+
+row.margin <- margin.table(gas.table, 1) # this adds the row variables together. 
+
+# Adding the columns at this point would cause our graphics to have a total sum as one of the column
+# to avoid this we'll save the baic table as a data.frame now.
+#########
+plot.table <- gas.table  %>% as.data.frame # we'll use this for graphing later
+names(plot.table) <- c("gas.type", "day.type", "value") # renames the columns into something coherent
+
+# This chunk of code attaches the row sums to the right side of gas.table
+#################
+gas.table <- gas.table %>% 
+  cbind(row.margin)
+
+column.margin <- margin.table(gas.table, 2) # ------ this creates the column summs
+
+gas.table <- gas.table %>%  
+  rbind(column.margin) %>% 
+  as.data.frame %>%
+  print # ----------- these four lines attach the column sums to the table and prints it our
+
+```
+
+### Part b
+
+```{r}
+ggplot(data = plot.table[plot.table$day.type == "Weekday",],  # the part in the [] subsets the data
+                                                              # to just weekdays
+       aes(x = gas.type, 
+           y = value,
+           fill = gas.type)) + # using a variable in the fill possition will give each gas.type a color
+  geom_bar(stat = "identity") # stat = "identity" tells ggplot that the values have already been counted
+                              # and condensened into a single cell. Stat = "bin" ggplot will find the
+                              # number of times each variable occurs.
+
+```
+
+### part c: Graphing the table
+
+```{r}
+
+ggplot(data = plot.table[plot.table$gas.type == "Premium",], # this time we are subseting on premium gas
+       aes(x = day.type,
+           y = value,
+           fill = day.type)) +
+  geom_bar(stat = "identity")
+
+```
+
+### part d
+
+Yes, this is probably because vehicles that require premium gas are more closely tied to recreation and leasure. People typiclaly people indulge in these practises on the weekend.
+
+
+# Problem 43
+
+### part a
+
+```{r}
+# get the data
+########
+
+owners <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 5\\05_owner_satisfaction\\05_owner_satisfaction.txt", header = TRUE, sep = "\t")
+
+owner.table <- table(owners$Satisfaction, owners$Question.Wording) # basic table
+
+owner.table <- cbind(owner.table, margin.table(owner.table, 1)) # attaching row sums
+
+owner.table <- rbind(owner.table, margin.table(owner.table, 2)) # attacning column sums
+
+print(owner.table) # displays table
+```
+### part b
+ 
+The table indicates that the questions that were asked in terms of satisfaction generally got the most possitive results. It appears that the way the question was ask primed a certain responce. The somewhat satisfied and very satisfied rows are the only two that have a higher proportion of people in the satisfied column. 
+
+### part c
+
+The company should word the question in terms of customer satisfaction.
+
+# Problem 54
+ 
+### part a
+
+In this instance we want to use column percentages because we are more interested percentages relitive to the company. 
+ 
+```{r}
+## Unforunatly there isn't a data set for this. We'll have to make it on our own
+## make three vectors of length 3
+##--------status, delta, amerian
+###############
+status <- c("On Time", "Delayed")  
+american <- c(1536, 416)
+delta <- c(11769, 3343)
+flight.delays <- data.frame(american, delta) # creates a dataframe
+rownames(flight.delays) <- status # names the rows with the contents of status
+
+flight.delays$american <- flight.delays$american / sum(flight.delays$american) # as a percentages
+flight.delays$delta <- flight.delays$delta / sum(flight.delays$delta) # as a percentage
+
+print(flight.delays)
+
+```
+Based off this percentage table American Airlines arrives ontime a greater percentage of the time.
+
+### part b
+
+```{r}
+Atlanta <- c(11512, 3334) # same ideas as before, we have to make the data from scratch
+Las_Vegas <- c(1007, 244)
+San_Diego <- c(601, 366)
+
+city.delay <- data.frame(Atlanta, Las_Vegas, San_Diego)
+rownames(city.delay) <- status # see the code box above
+city.delay$Atlanta <- city.delay$Atlanta / sum(city.delay$Atlanta)
+city.delay$Las_Vegas <- city.delay$Las_Vegas /sum(city.delay$Las_Vegas)
+city.delay$San_Diego <- city.delay$San_Diego / sum(city.delay$San_Diego)
+
+Atlanta <- c(653, 14193)
+Las_Vegas <- c(698, 553)
+San_Diego <- c(601, 366)
+airline <- c("American", "Delta")
+
+city.airline <- data.frame(Atlanta, Las_Vegas, San_Diego, row.names = airline) 
+
+city.airline$Atlanta <- city.airline$Atlanta / sum(city.airline$Atlanta)
+city.airline$Las_Vegas <- city.airline$Las_Vegas /sum(city.airline$Las_Vegas)
+city.airline$San_Diego <- city.airline$San_Diego / sum(city.airline$San_Diego)
+
+print(city.delay)
+print(city.airline)
+```
+
+Based on these two tables, we suspect the presents of a lurking variable. This is pricipally due to the discrepancy the frequency that different airlines fly certain routes. If you fly to Las Vegas the probablity that you'll be delayed is much smaller than if you fly to San Diego. In our case the majority of Delta's flights go into Atlanta. Hence their percentage in part a looks most like the Atlanta conditional distribution.  
+
+### part c
+
+
+```{r}
+Atlanta <- c(497, 11015)
+Las_Vegas <- c(561, 446)
+San_Diego <- c(478, 308)
+
+ontime <- data.frame(Atlanta, Las_Vegas, San_Diego, row.names = airline)
+ontime$Atlanta <- ontime$Atlanta / sum(ontime$Atlanta)
+ontime$Las_Vegas <- ontime$Las_Vegas /sum(ontime$Las_Vegas)
+ontime$San_Diego <- ontime$San_Diego / sum(ontime$San_Diego)
+
+print(ontime)
+```
+Upon examining the table it looks like destination isn't actually a lurking variable. The percentages on the ontime table and the city.airline table are about the same.
