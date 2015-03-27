@@ -71,11 +71,11 @@ gas.table <- gas.table %>%
 ### Part b
 
 ```{r}
-ggplot(data = plot.table[plot.table$day.type == "Weekday",],  # the part in the [] subsets the data
-                                                              # to just weekdays
+# ------------- subset data by weekday
+ggplot(data = plot.table[plot.table$day.type == "Weekday",],  
        aes(x = gas.type, 
            y = value,
-           fill = gas.type)) + # using a variable in the fill possition will give each gas.type a color
+           fill = gas.type)) + 
   geom_bar(stat = "identity") # stat = "identity" tells ggplot that the values have already been counted
                               # and condensened into a single cell. Stat = "bin" ggplot will find the
                               # number of times each variable occurs.
@@ -85,10 +85,9 @@ ggplot(data = plot.table[plot.table$day.type == "Weekday",],  # the part in the 
 ### part c: Graphing the table
 
 ```{r}
-
-ggplot(data = plot.table[plot.table$gas.type == "Premium",], # this time we are subseting on premium gas
-       aes(x = day.type,
-           y = value,
+ggplot(data = plot.table[plot.table$gas.type == "Premium",], 
+           aes(x = day.type,
+               y = value,
            fill = day.type)) +
   geom_bar(stat = "identity")
 
@@ -170,7 +169,7 @@ airline <- c("American", "Delta")
 
 city.airline <- data.frame(Atlanta, Las_Vegas, San_Diego, row.names = airline) 
 
-city.airline$Atlanta <- city.airline$Atlanta / sum(city.airline$Atlanta)
+city.airline$Atlanta <- city.airline$Atlanta / sum(city.airline$Atlanta)  # Making things into percentages
 city.airline$Las_Vegas <- city.airline$Las_Vegas /sum(city.airline$Las_Vegas)
 city.airline$San_Diego <- city.airline$San_Diego / sum(city.airline$San_Diego)
 
