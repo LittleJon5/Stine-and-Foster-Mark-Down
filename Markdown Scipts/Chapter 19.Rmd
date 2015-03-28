@@ -1,0 +1,138 @@
+---
+title: "Chapter 19"
+output: pdf_document
+---
+
+# Chapter 19 Examples
+
+## Problem 38; Convenience Shopping
+
+Get the data into R
+
+```{r}
+require(magrittr)
+require(ggplot2)
+convenience <- read.table("C:\\Users\\Jonathan\\Google Drive\\Stats Camp\\Stine&Foster\\Data by Chapter\\Chapter 19\\19_convenience\\19_convenience.txt",
+                          header = TRUE,
+                          sep = "\t")
+names(convenience)  <- c("sales", "volume", "washes", "day", "price.cents", "weekend")
+```
+### Part A: Scatter Plot
+
+```{r}
+ggplot(data = convenience, aes(x = volume, y = sales, color = day)) +
+  geom_point()
+
+cor(convenience$volume, convenience$sales)
+```
+The graph appears to be linear. The two variable have a correlation coeffient of .65. This looks good.
+
+### Part B
+For this part we'll need to make a linear model
+```{r}
+con.lm  <- lm(sales ~ volume, data = convenience)
+
+con.lm$coefficients
+```
+
+This gives us a line of y = 1148.21 + .321*Volume. It's concevable that the intercept is a valid measure. People do go to gas stations and not by gas. It maybe resonable to assume that they'd sell 1148$ even with no gas. 
+
+### Part C
+
+```{r}
+summary(con.lm)
+```
+Our R squared value is .4219
+Our Standard Error is 247
+So our line explaines 42% of the variation in sales based on the volume of gas sold. We would expect 95% of the deviations to within 494 dollars of our line. This is 2X the Standard Error.
+
+### Part D
+
+```{r}
+at3500 <- 1148.21 + .321*3500 # this is the line function evaluated at volume = 3500
+at4000 <- 1148.21 + .321*4000 # this is the line function evalueated at volume = 4000
+```
+In order to complete this problem we'll need to find the predicted value at the two points, 3500 and 4000. After we do that we'll just need to subtract them. 
+
+```{r}
+at4000 - at3500
+```
+
+We'd expect the average sales to differ by 160.5 $ bassed on a 500 gallon volume difference.
+
+### Part E: Unit change
+
+There are several ways to attack this problem. One way is to change our linear model. The linear model will provided us with all the information the problems has asked for.
+
+```{r}
+# I() allows you to modify elements of the linear model function
+# We need to change the units for sales and volume
+# volume is in gallon and needs to be in liters.
+# -----to make that change we'll muliply volume by 3.7854
+###########
+# Similarly we need to changes sales form us dollars to canadian dollars
+# -----we'll to that by muliplyig sales by 1.1.
+
+canada <- lm(I(sales*1.1) ~ I(volume*3.7854), data = convenience)
+```
+Now lets take a look at our coefficents.
+
+```{r}
+summary(canada)
+```
+Based on this our new line is: sales = 1263 + .09*volume
+our standard error is 271
+R^2 = .42 again.
+
+### Part F 
+
+The likely explanation is that buy gas and then happen to by something from the convience store as well. If people wanted to grab snacks they'd probably go somewhere else. 
+
+### Part G
+
+```{r}
+at4165 <- 1148.21 + .321*4165
+at4165
+```
+Sales are lower than we'd expect. Our residual value is: 
+```{r}
+1744 - at4165
+```
+
+### Part H: plot the residuals
+
+We'll need to make a new dataframe for ggplot with the residuals and the volume values.
+
+```{r}
+resid.plot <- data.frame(residuals = resid(con.lm), volume = convenience$volume)
+
+ggplot(data = resid.plot, aes(x = volume, y = residuals)) + 
+  geom_point()
+```
+
+Now we need the mean and the standard deviation of the residuals.
+
+```{r}
+mean(resid.plot$residuals)
+
+sd(resid.plot$residuals)
+
+```
+The mean is essentially 0. This is to be expected because the least squares regession line trying to devided the data exactly in half.
+
+The Standard deviation of the residuals is the same as the standard error of the regression or 247. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
